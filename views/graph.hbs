@@ -1,0 +1,57 @@
+{{!< layout}}
+{{#contentFor "cssHolder"}}
+<link href="/css/index.css" rel="stylesheet" type="text/css" />
+{{/contentFor}}
+
+<div>{{title}} - Index page
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script> 
+<div id="linechart_material"></div>
+</div>
+
+{{#contentFor "scriptHolder"}}
+<script>
+$(document).ready(function(){
+    $.ajax({
+	  dataType: "json",
+	  url: 'http://192.168.2.97:3000/api/pageHitCount/getAll',
+	  success: function(response){
+	  	var obj = {};
+	  	var a = [];
+	  	$(response).each(function( key,value ) {
+		  if(obj[value.timeStamp] === undefined)
+		  	obj[value.timeStamp] = 1;
+		  else
+		  	obj[value.timeStamp] = obj[value.timeStamp]+1;
+		});
+		$.map( obj, function( val, i ) {
+			  a.push([new Date(Number(i)),val]);
+		});
+		console.log(a);
+	  	google.charts.load('current', {'packages':['line']});
+		google.charts.setOnLoadCallback(drawChart);
+
+	    function drawChart() {
+	      var data = new google.visualization.DataTable();
+	      data.addColumn('date', 'Date');
+	      data.addColumn('number', 'Hit Count');
+	      data.addRows(a);
+
+	      var options = {
+	        chart: {
+	          title: 'Box Office Earnings in First Two Weeks of Opening',
+	          subtitle: 'in millions of dollars (USD)'
+	        },
+	        width: 900,
+	        height: 500
+	      };
+
+	      var chart = new google.charts.Line(document.getElementById('linechart_material'));
+
+	      chart.draw(data, options);
+	    }
+	}
+	});
+});
+</script>
+{{/contentFor}}

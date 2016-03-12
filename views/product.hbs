@@ -1,74 +1,157 @@
 {{!< layout}}
-{{#contentFor "cssHolder"}}
-  <link href="/css/index.css" rel="stylesheet" type="text/css" />
-{{/contentFor}}
 <hr>
 <div class="container">
 	<div class="container-product">
 		<h4>We Found <b>8</b> packages for you.</h4>
 		<ul>
 			<li>
-				<a href="#"><img src="images/bg-li-1.jpg" alt="" />
+				<a href="#"  class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-1.jpg" alt="" />
 					<h2>Pico 2 BHK</h2>
 					<p>A full 2 BHK solution for your house! Once you take this you need not worry about anyth...</p>
-					<div>Starts at ₹300/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹<strong>300</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 			<li>
-				<a href="#"><img src="images/bg-li-2.jpg" alt="" />
+				<a href="#"  class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-2.jpg" alt="" />
 					<h2>Bounce M</h2>
 					<p>Bounce M is the new member from the Bounce family, which is known for being  multi-face...</p>
-					<div>Starts at ₹300/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹<strong>300</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 			<li>
-				<a href="#"><img src="images/bg-li-3.jpg" alt="" />
+				<a href="#"  class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-3.jpg" alt="" />
 					<h2>The Couch Potato</h2>
 					<p>A full 2 BHK solution for your house! Once you take this you need not worry about anyth...</p>
-					<div>Starts at ₹5000/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹<strong>5000</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 			<li>
-				<a href="#"><img src="images/bg-li-4.jpg" alt="" />
+				<a href="#"  class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-4.jpg" alt="" />
 					<h2>Pico Dining Room</h2>
 					<p>Bounce M is the new member from the Bounce family, which is known for being  multi-face...</p>
-					<div>Starts at ₹200/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹<strong>200</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 			<li class="fifth">
-				<a href="#"><img src="images/bg-li-8.jpg" alt="" />
+				<a href="#" class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-8.jpg" alt="" />
 					<h2>Work From Home Zone</h2>
 					<p>A full 2 BHK solution for your house! Once you take this you need not worry about anyth...</p>
-					<div>Starts at ₹1500/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹<strong>1500</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 			<li>
-				<a href="#"><img src="images/bg-li-6.jpg" alt="" />
+				<a href="#"  class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-6.jpg" alt="" />
 					<h2>Mili Workstation</h2>
 					<p>A full 2 BHK solution for your house! Once you take this you need not worry about anyth...</p>
-					<div>Starts at ₹4500/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹<strong>4500</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 			<li>
-				<a href="#"><img src="images/bg-li-7.jpg" alt="" />
+				<a href="#"  class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-7.jpg" alt="" />
 					<h2>Elite 1 BHK</h2>
 					<p>Bounce M is the new member from the Bounce family, which is known for being  multi-face...</p>
-					<div>Starts at ₹900/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹<strong>900</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 			<li>
-				<a href="#"><img src="images/bg-li-8.jpg" alt="" />
+				<a href="#"  class="js-open-modal" data-modal-id="popup1"><h4>Selected</h4><img src="images/bg-li-8.jpg" alt="" />
+					
 					<h2>Mili Dining Room</h2>
 					<p>A full 2 BHK solution for your house! Once you take this you need not worry about anyth...</p>
-					<div>Starts at ₹300/mo<span>Add to Cart</span></div>
+					<div>Starts at ₹ <strong>300</strong>/mo<span>Add to Cart</span></div>
 				</a>
 			</li>
 		</ul>
 	</div>
 </div>
-	
+<div id="popup1" class="modal-box">
+  <header> <a href="#" class="js-modal-close close">×</a>
+    <h3></h3>
+  </header>
+    <div class="modal-body">
+        <img src=""/>
+        <div class="container-details">
+			<p></p>
+	    	<h4></h4>
+	    	<a href="#" class="btn btn-danger" id="removeFromCartid">Remove From Cart</a>
+	    	<h3>Total Amount: </h3>
+        </div>
+    </div>
+  <footer> <a href="#" class="btn btn-success" id="proceedToPay">Proceed To Pay</a> <a href="#" class="btn btn-defualt js-modal-close">Continue Shopping</a><a href="#" class="btn btn-small js-modal-close">Close</a> </footer>
+</div>
 
 
 {{#contentFor "scriptHolder"}}
 
+<script>
+$(function(){
+var carttno=0;
+var appendthis =  ("<div class='modal-overlay js-modal-close'></div>");
+
+	$('a[data-modal-id]').click(function(e) {
+		e.preventDefault();
+    $("body").append(appendthis);
+    $(".modal-overlay").fadeTo(500, 0.7);
+    //$(".js-modalbox").fadeIn(500);
+		var modalBox = $(this).attr('data-modal-id');
+		$('#'+modalBox).fadeIn($(this).data());
+	});  
+  
+  
+$(".js-modal-close, .modal-overlay").click(function() {
+    $(".modal-box, .modal-overlay").fadeOut(500, function() {
+        $(".modal-overlay").remove();
+    }); 
+});
+ 
+$(window).resize(function() {
+    $(".modal-box").css({
+        top: ($(window).height() - $(".modal-box").outerHeight()) / 2,
+        left: ($(window).width() - $(".modal-box").outerWidth()) / 2
+    });
+});
+function pricecal(value){
+	var totalAmount=value+value;
+	$(".container-details h3").text(totalAmount);
+}
+function cartstatus(){
+    carttno= carttno + 1;
+    $('.right-header span').text(carttno);
+}
+function reducecart(){
+	var currentval=0;
+	currentval=$('.right-header span').text();
+	currentval= currentval-1;
+	console.log(currentval);
+	$('.right-header span').text(currentval);
+}
+ $('.js-open-modal').click(function(){
+		$(this).children("h4:first").css("display","block");
+		
+		cartstatus();
+		$('.right-header span').text(carttno);
+		$('#removeFromCartid').click(function(){
+	 		$('.container-product ul > li > a h4').css("display","none");
+	 		reducecart();
+		 })
+ 		var heading=$(this).children("h2:first").text();
+ 		$('#popup1 header h3').text(heading);
+ 		var details=$(this).children("p:first").text();
+ 		$('.modal-body p').text(details);
+ 		var priceDetails=$(this).children("div:first").text();
+ 		$('.modal-body p').text(details);
+ 		var pricetotal=$(this).children("strong:first").text();
+ 		pricecal(pricetotal);
+ 		$('.modal-body h4').text(priceDetails);
+ 		var edith4=$('.modal-body h4').text();
+ 		var result=edith4.replace(/Add to Cart/g,"");
+ 		$('.modal-body h4').text(result);
+ 		var imgsrc=$(this).children("img:first").attr("src");
+ 		$('.modal-body img').attr("src",imgsrc); 
+ });
+
+$(window).resize();
+ 	
+});
+</script>
 {{/contentFor}}

@@ -13,6 +13,17 @@
                 {{{body}}}
             </div>
         </div>
+        <script src="/js/jquery.js" type="text/javascript"></script>
+        <script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(location.pathname.substring(1) ? location.pathname.substring(1) : location.host);
+
+        (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = '/js/tracker.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+        </script>
         {{{block "scriptHolder"}}}
 	</body>
 </html>

@@ -4,11 +4,15 @@ var router = express.Router();
 var indexController = require('../controller/indexController');
 var graphController = require('../controller/graphController');
 var productController = require('../controller/productController');
+var paymentController = require('../controller/paymentController');
+var dashboardController = require('../controller/dashboardController');
 var sendMail = require('../controller/sendMail');
 
 router.get('/', indexController);
 router.get('/graph', graphController);
 router.get('/product', productController);
+router.get('/payment', paymentController);
+router.get('/dashboard', dashboardController);
 router.get('/sendMail', sendMail);
 
 module.exports = router;

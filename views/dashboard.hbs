@@ -61,7 +61,6 @@
 	    });
 	var page_Name = 'product';
 	var type = 'Time Stamp';
-	google.charts.load('current', {'packages':['line']});
 
 		$('input[name="filter"]').change(function(){
 			page_Name = $('#ddwn').val();
@@ -150,7 +149,7 @@ var page_Name = 'graph';
 				  url: 'http://localhost:3000/api/pageHitCount/getBetTS/'+Date.parse($('#minDate').val())+'/'+Date.parse($('#maxDate').val()),
 				  success: function(data){
 				  	page_Name = $('#ddwn').val();
-				  	drawChart(data);
+				  	drawChart2(data);
 				}
 			});
 		})
@@ -161,16 +160,16 @@ var page_Name = 'graph';
 			demo();
 		});
 
-		function demo(){
+		function demo2(){
 		    $.ajax({
 			  dataType: "json",
 			  url: 'http://localhost:3000/api/pageHitCount/getAll',
 			  success: function(data){
-			  		drawChart(data);
+			  		drawChart2(data);
 				}
 			});
 		}
-		function drawChart(response){
+		function drawChart2(response){
 			var obj = {};
 				  	var a = [];
 				  	$(response).each(function( key,value ) {
@@ -219,7 +218,7 @@ var page_Name = 'graph';
 				      
 				    }
 		}
-	demo();
+	demo2();
 </script>
 <script src="http://code.highcharts.com/highcharts.js"></script>
 	</script>

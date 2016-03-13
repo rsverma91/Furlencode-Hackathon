@@ -2,46 +2,39 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 // MongoDB setup
-mongoose.connect('mongodb://192.168.2.97/furlencode');
+mongoose.createConnection('mongodb://192.168.2.97/furlencode');
 
 module.exports = function(req, res, next) {
     var Schema = mongoose.Schema;
-    var pageHit = new Schema({
+    var pushTrack = new Schema({
         pageName: String,
         timeStamp: String,
-        lat: String,
-        lng: String,
-        cityName: String
+        trackingText: String,
+        eventType: String,
+        options: Object
     });
-    mongoose.model('pageHit', pageHit);
-    var phit = mongoose.model('pageHit');
-    router.get('/a.gif', function(req, res) {
-        var data = {
-            pageName: req.query.pageName,
-            timeStamp: Number(req.query.timeStamp),
-            lat: req.query.lat,
-            lng: req.query.lng,
-            cityName: req.query.cityName
-        }
-        var add_pagehit = new phit(data);
-        add_pagehit.save(function(error, data) {
-            //var img = document.createElement('img');
+    mongoose.model('pushTrack', pushTrack);
+    var ptrack = mongoose.model('pushTrack');
+    router.get('/p.gif', function(req, res) {
+        var data = JSON.parse(req.query.data);
+        var add_ptrack = new ptrack(data);
+        add_ptrack.save(function(error, data) {
             res.setHeader('content-type', 'image/gif');
-            //res.writeHead(200, {'Content-Type': 'image/gif' });
             res.send();
         });
     });
     router.get('/getAll', function(req, res) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        phit.find(function(error, data) {
+        ptrack.find(function(error, data) {
             res.send(data);
         });
     });
+    /*
     router.get('/getByCityName/:cityName', function(req, res) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        phit.find({
+        ptrack.find({
             cityName: req.params.cityName
         }, function(error, data) {
             res.send(data);
@@ -50,14 +43,14 @@ module.exports = function(req, res, next) {
     router.get('/getBetTS/:minTM/:maxTM', function(req, res) {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-        phit.find({
+        ptrack.find({
             timeStamp: {
-                $gte: Number(req.params.minTM),
-                $lt: Number(req.params.maxTM)
+                $gte: req.params.minTM,
+                $lte: req.params.maxTM
             }
         }, function(error, data) {
             res.send(data);
         });
-    });
+    });*/
     return router;
 };

@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
 // MongoDB setup
-mongoose.connect('mongodb://192.168.2.97/furlencode');
+mongoose.connect('mongodb://localhost/furlencode');
 
 module.exports = function(req, res, next) {
     var Schema = mongoose.Schema;

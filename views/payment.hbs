@@ -9,36 +9,35 @@
 			  <a href="#" class="list-group-item" id="cod">Cash On Delivery</a>
 			  <a href="#" class="list-group-item" id="net-banking">Net Banking</a>
 			</div>
+			<div class="list-group" style="font-size: 16px;color: #999;">
+			<h1 style="text-align: center;font-size: 25px;">Item Details</h1>
+		  	<div class="list-group-item">Product : <span style="color: #666;font-size:14px">{{product}}</span></div>
+		  	<div class="list-group-item">Grand Total : <span style="color: #42A9C1;font-weight: 600;">₹{{price}}</span></div>
+
+		</div>
 		</div>
 		<div class="col-sm-8 col-lg-8">
-			<form  action="javascript:alert( 'success!' );">
-				Selected mode of transfer amount is :<span></span>
+			<div id="userForm">
+				Selected mode of transfer amount is :<span>Credit Card</span>
 				<div class="form-group">
 					<label for="exampleInputEmail1">Name</label>
-					<input type="text" class="form-control" id="exampleInputName" placeholder="Name">
+					<input type="text" name="custName" class="form-control" id="exampleInputName" placeholder="Name">
 				</div>
 				<div class="form-group">
 					<label for="exampleInputEmail1">Email address</label>
-					<input type="email" class="form-control" id="exampleInputEmail" placeholder="Email">
+					<input type="email" name="custEmail" class="form-control" id="exampleInputEmail" placeholder="Email">
 				</div>
 				<div class="form-group">
 					<label for="exampleInputPassword1">Phone Number</label>
-					<input type="phone" class="form-control" id="exampleInputPhoneNumber" placeholder="Phone Number">
+					<input type="phone" name="cushMob" class="form-control" id="exampleInputPhoneNumber" placeholder="Phone Number">
 				</div>
 				<div class="form-group">
 					<label for="exampleInputPassword1">City Name</label>
-					<input type="phone" class="form-control" id="exampleInputCityName" placeholder="City Name">
+					<input type="text" name="custCity" class="form-control" id="exampleInputCityName" placeholder="City Name">
 				</div>
-				<div class="checkbox">
-					<label>
-					  <input type="checkbox"> Check me out
-					</label>
-				</div>
-				<button type="submit" class="btn btn-default">Py Now</button>
-			</form>
-			<div id="other">
-			  Trigger the handler
+				<button type="submit" class="btn btn-default" id="paynow">Py Now</button>
 			</div>
+			<div id="other"></div>
 		</div>
 	</div>
 	
@@ -48,7 +47,7 @@
 
 {{#contentFor "scriptHolder"}}
 <script type="text/javascript">
-	var cardtype="";
+	var cardtype="Credit Card";
 	$('#credit-card').click(function(){
 		$('form span').text("Credit Card");
 		cardtype="Credit Card";
@@ -65,23 +64,26 @@
 		$('form span').text("Net Banking")
 		cardtype="Net Banking";
 	})
-	$( "form" ).submit(function( event ) {
-		alert( "Handler for .submit() called." );
-
-		var nameValue=$('#exampleInputName').text();
-		var emailValue=$('#exampleInputEmail').text();
-	    var phoneValue=$('#exampleInputPhoneNumber').text();
-		var cityValue=$('#exampleInputCityName').text();
+	$("#paynow").on('click',function(event) {
+		$(this).attr("disabled", "disabled");
+		var nameValue=$('#exampleInputName').val();
+		var emailValue=$('#exampleInputEmail').val();
+	    var phoneValue=$('#exampleInputPhoneNumber').val();
+		var cityValue=$('#exampleInputCityName').val();
 
 		var formdata={
-			name:nameValue,
-			email:emailValue,
-			phone:phoneValue,
-			city:cityValue,
-			paymentmode:cardtype
+			CustName:nameValue,
+			CustEmail:emailValue,
+			CustPhone:phoneValue,
+			CustCity:cityValue,
+			paymentMode:cardtype,
+			timeStamp: Math.floor(((new Date()).getTime())/1000)*1000,
 		}
-		console.data(formdata)
-	  event.preventDefault();
-	});
+		Tracker.pushTracking("Final Payment", 'click', formdata);
+		$.post("/api/doPayment", formdata, function(resp){
+			$("#other").text("Thanks for using our service")
+		});			
+	  event.preventDefault();			
+	});			
 </script>
 {{/contentFor}}

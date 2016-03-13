@@ -13,7 +13,7 @@
 			<option value="product">product</option>
 			<option value="chart">chart</option>
 			<option value="localhost:3000">localhost:3000</option>
-			<option value="192.168.2.97:3000">192.168.2.97:3000</option>
+			<option value="localhost:3000">localhost:3000</option>
 			<option value="index">index</option>
 		</select>
 	  Min Date(mm-dd-yyyy): <input type="text" id="minDate"/>	Max Date(mm-dd-yyyy): <input type="text" id="maxDate"/> <input type="button" value="filter" id="filterByDate"/>
@@ -29,7 +29,7 @@ $(document).ready(function(){
 		$('#filterByDate').click(function(){
 			$.ajax({
 				  dataType: "json",
-				  url: 'http://192.168.2.97:3000/api/pageHitCount/getBetTS/'+Date.parse($('#minDate').val())+'/'+Date.parse($('#maxDate').val()),
+				  url: 'http://localhost:3000/api/pageHitCount/getBetTS/'+Date.parse($('#minDate').val())+'/'+Date.parse($('#maxDate').val()),
 				  success: function(data){
 				  	page_Name = $('#ddwn').val();
 				  	drawChart(data);
@@ -46,7 +46,7 @@ $(document).ready(function(){
 		function demo(){
 		    $.ajax({
 			  dataType: "json",
-			  url: 'http://192.168.2.97:3000/api/pageHitCount/getAll',
+			  url: 'http://localhost:3000/api/pageHitCount/getAll',
 			  success: function(data){
 			  		drawChart(data);
 				}

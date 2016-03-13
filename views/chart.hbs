@@ -33,7 +33,7 @@ $(document).ready(function(){
 		function demo(){
 		    $.ajax({
 			  dataType: "json",
-			  url: 'http://192.168.2.97:3000/api/pushTracking/getAll',
+			  url: 'http://localhost:3000/api/pushTracking/getAll',
 			  success: function(data){
 			  		drawChart(data);
 				}

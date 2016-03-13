@@ -13,7 +13,7 @@ router.get('/', indexController);
 router.get('/graph', graphController);
 router.get('/chart', chartController);
 router.get('/product', productController);
-router.get('/payment', paymentController);
+router.post('/payment', paymentController);
 router.get('/dashboard', dashboardController);
 router.get('/sendMail', sendMail);
 

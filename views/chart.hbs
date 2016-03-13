@@ -1,131 +1,108 @@
 {{!< layout}}
 {{#contentFor "cssHolder"}}
 <link href="/css/index.css" rel="stylesheet" type="text/css" />
-<style>
-.axis text {
-  font: 10px sans-serif;
-}
-.axis path,
-.axis line {
-  fill: none;
-  stroke: #000;
-  shape-rendering: crispEdges;
-}
-.bar {
-  fill: steelblue;
-  fill-opacity: .9;
-}
-
-.x.axis path {
-  display: none;
-}
-
-label {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-
-</style>
 {{/contentFor}}
-<div>
-{{title}} - Index page
-<label><input type="checkbox"> Sort values</label>
-<script src="//d3js.org/d3.v3.min.js"></script>
+
+<div>{{title}} - Index page
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		Page: <select id="ddwn">
+			<option value="product">product</option>
+		</select>
+		Short By 
+		<input type="radio" name="filter" value="Time Stamp"/>Time Stamp
+		<input type="radio" name="filter" value="Product Name" />Product Name
+		<input type="radio" name="filter" value="Product Price" />Product Price
+      <div id="container"></div>
 </div>
+
 {{#contentFor "scriptHolder"}}
 <script>
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+$(document).ready(function(){
+	var page_Name = 'product';
+	var type = 'Time Stamp';
+	google.charts.load('current', {'packages':['line']});
 
-var formatPercent = d3.format(".0%");
+		$('input[name="filter"]').change(function(){
+			page_Name = $('#ddwn').val();
+			type = $('input[name="filter"]:checked').val();
+			demo();
+		})
+		function demo(){
+		    $.ajax({
+			  dataType: "json",
+			  url: 'http://192.168.2.97:3000/api/pushTracking/getAll',
+			  success: function(data){
+			  		drawChart(data);
+				}
+			});
+		}
+		function drawChart(response){
+			var obj = {};
+			var a = [];
+		  	var b = [];
+		  	var c = {};
+		  	$(response).each(function( key,value ) {
+		  	 if( page_Name === value.pageName){
+		  	 if(type === 'Time Stamp'){	
+				  if(obj[value.timeStamp] === undefined)
+				  	obj[value.timeStamp] = 1;
+				  else
+				  	obj[value.timeStamp] = obj[value.timeStamp]+1;
+				  }
+			  else if(type === 'Product Name'){	
+				  if(obj[value.timeStamp+':'+value.options.productName] === undefined)
+				  	obj[value.timeStamp+':'+value.options.productName] = 1;
+				  else
+				  	obj[value.timeStamp+':'+value.options.productName] = obj[value.timeStamp+':'+value.options.productName]+1;
+				  }
+			  else if(type === 'Product Price'){	
+				  if(obj[value.timeStamp+':'+value.options.productPrice] === undefined)
+				  	obj[value.timeStamp+':'+value.options.productPrice] = 1;
+				  else
+				  	obj[value.timeStamp+':'+value.options.productPrice] = obj[value.timeStamp+':'+value.options.productPrice]+1;
+				  }
+			  }
+			  
+			});
+			console.log(obj);
+			$.map( obj, function( val, i ) {
+				 a.push(new Date(Number(i.split(':')[0])));
+				 b.push(val);
+				 c[i.split(':')[0]] = i.split(':')[1];
+			});
+			console.log(c);
+			if(a.length == 0){
+				alert('No Record Found');
+				return;}
 
-var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width], .1, 1);
-
-var y = d3.scale.linear()
-    .range([height, 0]);
-
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(formatPercent);
-
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-d3.json("https://bl.ocks.org/mbostock/raw/3885705/data.tsv", function(error, data) {
-
-  data.forEach(function(d) {
-    d.frequency = +d.frequency;
-  });
-
-  x.domain(data.map(function(d) { return d.letter; }));
-  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Frequency");
-
-  svg.selectAll(".bar")
-      .data(data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.letter); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.frequency); })
-      .attr("height", function(d) { return height - y(d.frequency); });
-
-  d3.select("input").on("change", change);
-
-  var sortTimeout = setTimeout(function() {
-    d3.select("input").property("checked", true).each(change);
-  }, 2000);
-
-  function change() {
-    clearTimeout(sortTimeout);
-
-    // Copy-on-write since tweens are evaluated after a delay.
-    var x0 = x.domain(data.sort(this.checked
-        ? function(a, b) { return b.frequency - a.frequency; }
-        : function(a, b) { return d3.ascending(a.letter, b.letter); })
-        .map(function(d) { return d.letter; }))
-        .copy();
-
-    svg.selectAll(".bar")
-        .sort(function(a, b) { return x0(a.letter) - x0(b.letter); });
-
-    var transition = svg.transition().duration(750),
-        delay = function(d, i) { return i * 50; };
-
-    transition.selectAll(".bar")
-        .delay(delay)
-        .attr("x", function(d) { return x0(d.letter); });
-
-    transition.select(".x.axis")
-        .call(xAxis)
-      .selectAll("g")
-        .delay(delay);
-  }
+		    $('#container').highcharts({
+		        title: {
+		            text: 'Fruit Consumption'
+		        },
+		        tooltip: {
+				    formatter: function() {
+				        return this.x+ '<br/> Hit Count <b>' + this.y + '</b>'+'<br/>'+type+' <b>'+c[this.x]+'</b>';
+				    }
+				},
+		        xAxis: {
+		            categories: a
+		        },
+		        yAxis: {
+		            title: {
+		                text: 'Fruit eaten'
+		            }
+		        },
+		        series: [{
+		            data: b
+		        }]
+		    });
+		    
+		}
+	demo();
 });
 </script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
 {{/contentFor}}

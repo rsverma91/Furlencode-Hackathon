@@ -5,7 +5,10 @@
 
 <div>{{title}} - Index page
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-		<select id="ddwn">
+<link href="http://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+		Page: <select id="ddwn">
 			<option value="graph">graph</option>
 			<option value="product">product</option>
 			<option value="chart">chart</option>
@@ -13,6 +16,7 @@
 			<option value="192.168.2.97:3000">192.168.2.97:3000</option>
 			<option value="index">index</option>
 		</select>
+	  Min Date(mm-dd-yyyy): <input type="text" id="minDate"/>	Max Date(mm-dd-yyyy): <input type="text" id="maxDate"/> <input type="button" value="filter" id="filterByDate"/>
       <div id="chart_div"></div>
 </div>
 
@@ -20,64 +24,83 @@
 <script>
 $(document).ready(function(){
 	var page_Name = 'graph';
+	google.charts.load('current', {'packages':['line']});
+
+		$('#filterByDate').click(function(){
+			$.ajax({
+				  dataType: "json",
+				  url: 'http://192.168.2.97:3000/api/pageHitCount/getBetTS/'+Date.parse($('#minDate').val())+'/'+Date.parse($('#maxDate').val()),
+				  success: function(data){
+				  	page_Name = $('#ddwn').val();
+				  	drawChart(data);
+				}
+			});
+		})
 		$('#ddwn').change(function(){
 			page_Name = $(this).val();
+			$('#minDate').val('');
+			$('#maxDate').val('');
 			demo();
 		});
 
-		google.charts.load('current', {'packages':['line']});
 		function demo(){
 		    $.ajax({
 			  dataType: "json",
 			  url: 'http://192.168.2.97:3000/api/pageHitCount/getAll',
-			  success: function(response){
-			  	var obj = {};
-			  	var a = [];
-			  	$(response).each(function( key,value ) {
-			  	 if( page_Name === value.pageName){	
-			  	 	console.log(value.timeStamp);
-				  if(obj[value.timeStamp] === undefined)
-				  	obj[value.timeStamp] = 1;
-				  else
-				  	obj[value.timeStamp] = obj[value.timeStamp]+1;
-				  }
-				});
-				$.map( obj, function( val, i ) {
-					  a.push([new Date(Number(i)),val]);
-				});
-			      google.charts.setOnLoadCallback(drawChart);
-				  function drawChart() {
-				 var chartDiv = document.getElementById('chart_div');
-				  var data = new google.visualization.DataTable();
-			      data.addColumn('date', 'Date And Time');
-			      data.addColumn('number', 'Hit Count');
-				  data.addRows(a);
-				  var materialOptions = {
-			        chart: {
-			          title: 'Average Temperatures and Daylight in Iceland Throughout the Year'
-			        },
-			        width: 900,
-			        height: 600,
-			        series: {
-			          0: {axis: 'Hits'}
-			        },
-			        axes: {
-			          y: {
-			            Hits: {label: 'Hit Count'}
-			          }
-			        }
-			      };
+			  success: function(data){
+			  		drawChart(data);
+				}
+			});
+		}
+		function drawChart(response){
+			var obj = {};
+				  	var a = [];
+				  	$(response).each(function( key,value ) {
+				  	 if( page_Name === value.pageName){	
+				  	 	console.log(value.timeStamp);
+					  if(obj[value.timeStamp] === undefined)
+					  	obj[value.timeStamp] = 1;
+					  else
+					  	obj[value.timeStamp] = obj[value.timeStamp]+1;
+					  }
+					});
+					$.map( obj, function( val, i ) {
+						  a.push([new Date(Number(i)),val]);
+					});
+					if(a.length == 0){
+						alert('No Record Found');
+						return;}
+				      google.charts.setOnLoadCallback(drawChart);
+					  function drawChart() {
+					 var chartDiv = document.getElementById('chart_div');
+					  var data = new google.visualization.DataTable();
+				      data.addColumn('date', 'Date And Time');
+				      data.addColumn('number', 'Hit Count');
+					  data.addRows(a);
+					  var materialOptions = {
+				        chart: {
+				          title: ''
+				        },
+				        width: 900,
+				        height: 500,
+				        series: {
+				          0: {axis: 'Hits'}
+				        },
+				        axes: {
+				          y: {
+				            Hits: {label: 'Hit Count'}
+				          }
+				        }
+				      };
 
-			      function drawMaterialChart() {
-			        var materialChart = new google.charts.Line(chartDiv);
-			        materialChart.draw(data, materialOptions);
-			      }
-			      drawMaterialChart();
-			      
-			    }
-			}
-		});
-	}
+				      function drawMaterialChart() {
+				        var materialChart = new google.charts.Line(chartDiv);
+				        materialChart.draw(data, materialOptions);
+				      }
+				      drawMaterialChart();
+				      
+				    }
+		}
 	demo();
 });
 </script>

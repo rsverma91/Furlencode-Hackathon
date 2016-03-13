@@ -5,12 +5,17 @@
 			<h3>Rent awesome furniture. Transform your home in 72 hours.</h3>
 			<div class="searchbox">
 				<input type="text" placeholder="Search.." class="search-box">
-				<a href="/product" class="search-btn"><img src="images/icon-search.jpg" alt=""/></a>
+				<a href="javascript:void(0)" class="search-btn"><img src="images/icon-search.jpg" alt=""/></a>
 			</div>			
 		</div> 
 	</div>
 
 
 {{#contentFor "scriptHolder"}}
-
+	<script type="text/javascript">
+		$(".search-btn").on('click', function(){
+			Tracker.pushTracking("Index Search", 'click', {});
+			location.href = '/product';
+		})
+	</script>
 {{/contentFor}}

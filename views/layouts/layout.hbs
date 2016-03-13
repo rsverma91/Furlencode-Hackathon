@@ -42,10 +42,11 @@
 
         </footer>
         <script src="/js/jquery.js" type="text/javascript"></script>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script type="text/javascript">
             var _gaq = _gaq || [];
-            _gaq.push(location.pathname.substring(1) ? location.pathname.substring(1) : location.host);
+            _gaq.push(location.pathname.substring(1) ? location.pathname.substring(1) : 'index');
 
             (function() {
             var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
